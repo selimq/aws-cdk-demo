@@ -1,19 +1,40 @@
-import { Duration, Stack, StackProps } from 'aws-cdk-lib';
-import * as sns from 'aws-cdk-lib/aws-sns';
-import * as subs from 'aws-cdk-lib/aws-sns-subscriptions';
-import * as sqs from 'aws-cdk-lib/aws-sqs';
-import { Construct } from 'constructs';
+import * as cdk from "aws-cdk-lib";
+import * as lambda from "aws-cdk-lib/aws-lambda";
+import * as path from "path";
+import * as apigw from "aws-cdk-lib/aws-apigateway";
 
-export class CdkStack extends Stack {
-  constructor(scope: Construct, id: string, props?: StackProps) {
-    super(scope, id, props);
+export class CdkStack extends cdk.Stack {
+    constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
+        super(scope, id, props);
 
-    const queue = new sqs.Queue(this, 'CdkQueue', {
-      visibilityTimeout: Duration.seconds(300)
-    });
+        const helloLambda = new lambda.Function(this, "helloLambda", {
+            functionName: "helloLambda",
+            runtime: lambda.Runtime.NODEJS_16_X,
+            code: lambda.Code.fromAsset(
+                path.join(__dirname, "./src/lambdas/helloLambda")
+            ),
+            handler: "index.handler"
+        })
 
-    const topic = new sns.Topic(this, 'CdkTopic');
+        new apigw.LambdaRestApi(this, "Endpoint", {
+            handler: helloLambda
+        })
 
-    topic.addSubscription(new subs.SqsSubscription(queue));
-  }
+        // #region Bucket and Policies
+        const photoBucket = new cdk.aws_s3.Bucket(this, "PhotoBucket", {
+            bucketName: "PhotoBucket",
+        });
+
+        const photoBucketReadPolicy: cdk.aws_iam.PolicyStatement = new cdk.aws_iam.PolicyStatement({
+            actions: ["s3:GetObject"],
+            resources: [photoBucket.arnForObjects("*")]
+        })
+        const photoBucketWritePolicy: cdk.aws_iam.PolicyStatement = new cdk.aws_iam.PolicyStatement({
+            actions: ["s3:PutObject"],
+            resources: [photoBucket.arnForObjects("*")]
+        })
+        // #endregion
+
+
+    }
 }

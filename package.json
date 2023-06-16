@@ -23,5 +23,21 @@
   "dependencies": {
     "aws-cdk-lib": "2.50.0",
     "constructs": "^10.0.0"
-  }
+  },
+  "description": "You should explore the contents of this project. It demonstrates a CDK app with an instance of a stack (`CdkStack`) which contains an Amazon SQS queue that is subscribed to an Amazon SNS topic.",
+  "main": "jest.config.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/selimq/aws-cdk-demo.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/selimq/aws-cdk-demo/issues"
+  },
+  "homepage": "https://github.com/selimq/aws-cdk-demo#readme"
 }

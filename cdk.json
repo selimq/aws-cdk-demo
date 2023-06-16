@@ -37,6 +37,22 @@
     "@aws-cdk/core:target-partitions": [
       "aws",
       "aws-cn"
-    ]
+    ],
+    "env:development": {
+      "basePath": "v1",
+      "region": "eu-central-1"
+    },
+    "env:qa": {
+      "basePath": "v1",
+      "region": "eu-central-1"
+    },
+    "env:staging": {
+      "basePath": "v1",
+      "region": "eu-central-1"
+    },
+    "env:production": {
+      "basePath": "v1",
+      "region": "eu-central-1"
+    }
   }
 }
